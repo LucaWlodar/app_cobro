@@ -1,0 +1,35 @@
+{% extends "layout.html" %}
+{% block content %}
+<h2>Carrito</h2>
+{% if order and order.items %}
+<table class="table">
+  <thead>
+    <tr><th>Producto</th><th>Cantidad</th><th>Unitario</th><th>Subtotal</th><th></th></tr>
+  </thead>
+  <tbody>
+    {% for it in order.items %}
+    {% if it.product %}
+    <tr>
+      <td>{{ it.product.name }}</td>
+      <td>{{ it.quantity }}</td>
+      <td>${{ "%.2f"|format(it.product.price) }}</td>
+      <td>${{ "%.2f"|format(it.product.price * it.quantity) }}</td>
+      <td>
+        <form method="POST" action="{{ url_for('remove_from_cart', item_id=it.id) }}">
+          <button class="btn btn-sm btn-danger">Eliminar</button>
+        </form>
+      </td>
+    </tr>
+    {% endif %}
+    {% endfor %}
+    <tr>
+      <td colspan="4" class="text-end"><strong>Total</strong></td>
+      <td><strong>${{ "%.2f"|format(order.total()) }}</strong></td>
+    </tr>
+  </tbody>
+</table>
+<a href="{{ url_for('checkout') }}" class="btn btn-primary">Pagar</a>
+{% else %}
+  <p>Carrito vacío</p>
+{% endif %}
+{% endblock %}

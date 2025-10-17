@@ -1,0 +1,28 @@
+{% extends "layout.html" %}
+{% block content %}
+<h1>Catálogo</h1>
+<div class="row">
+  {% for p in products %}
+  <div class="col-md-4 mb-3">
+    <div class="card h-100">
+      <div class="card-body">
+        <h5 class="card-title">{{ p.name }} - ${{ "%.2f"|format(p.price) }}</h5>
+        <p class="card-text">{{ p.description }}</p>
+        {% if current_user.is_authenticated %}
+        <form action="{{ url_for('add_to_cart', product_id=p.id) }}" method="POST">
+          <div class="input-group mb-2">
+            <input type="number" name="quantity" value="1" min="1" class="form-control" />
+            <button class="btn btn-primary" type="submit">Agregar al carrito</button>
+          </div>
+        </form>
+        {% else %}
+        <p class="text-muted"><em>Inicia sesión para agregar al carrito</em></p>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+  {% else %}
+    <p>No hay productos.</p>
+  {% endfor %}
+</div>
+{% endblock %}

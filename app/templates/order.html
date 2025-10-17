@@ -1,0 +1,26 @@
+{% extends "layout.html" %}
+{% block content %}
+<h2>Resumen pedido</h2>
+<table class="table">
+  <thead><tr><th>Producto</th><th>Cantidad</th><th>Subtotal</th></tr></thead>
+  <tbody>
+    {% for it in order.items %}
+    <tr>
+      <td>{{ it.product.name }}</td>
+      <td>{{ it.quantity }}</td>
+      <td>${{ "%.2f"|format(it.product.price * it.quantity) }}</td>
+    </tr>
+    {% endfor %}
+    <tr><td colspan="2"><strong>Total</strong></td><td><strong>${{ "%.2f"|format(order.total()) }}</strong></td></tr>
+  </tbody>
+</table>
+
+<form method="POST" action="{{ url_for('pay_local', order_id=order.id) }}" style="display:inline">
+  <button class="btn btn-success">Pagar (Simulador local)</button>
+</form>
+
+<form method="POST" action="{{ url_for('mp_create_preference', order_id=order.id) }}" style="display:inline">
+  <button class="btn btn-warning">Pagar con Mercado Pago</button>
+</form>
+
+{% endblock %}
